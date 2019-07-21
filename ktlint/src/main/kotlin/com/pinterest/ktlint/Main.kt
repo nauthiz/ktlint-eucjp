@@ -307,7 +307,7 @@ class KtlintCommandLine {
                     print(formattedFileContent)
                 } else {
                     if (fileContent !== formattedFileContent) {
-                        File(fileName).writeText(formattedFileContent, charset("UTF-8"))
+                        File(fileName).writeText(formattedFileContent, charset("EUC-JP"))
                     }
                 }
             } else {
@@ -351,7 +351,7 @@ class KtlintCommandLine {
         } else {
             patterns.fileSequence()
                 .takeWhile { errorNumber.get() < limit }
-                .map { file -> Callable { file to process(file.path, file.readText()) } }
+                .map { file -> Callable { file to process(file.path, file.readText(charset("EUC-JP"))) } }
                 .parallel({ (file, errList) -> report(file.location(relative), errList) })
         }
         reporter.afterAll()
@@ -410,7 +410,7 @@ class KtlintCommandLine {
                 )
             }
             val stream = if (output != null) {
-                File(output).parentFile?.mkdirsOrFail(); PrintStream(output, "UTF-8")
+                File(output).parentFile?.mkdirsOrFail(); PrintStream(output, "EUC-JP")
             } else if (stdin) System.err else System.out
             return reporterProvider.get(stream, config)
                 .let { reporter ->
@@ -602,7 +602,7 @@ class KtlintCommandLine {
                     s.split("=", limit = 2).let { e ->
                         map.put(
                             e[0],
-                            URLDecoder.decode(e.getOrElse(1) { "true" }, "UTF-8")
+                            URLDecoder.decode(e.getOrElse(1) { "true" }, "EUC-JP")
                         )
                     }
                 }
